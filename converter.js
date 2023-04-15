@@ -25,9 +25,10 @@ const getContractRoles = async () => {
   await doc.loadInfo()
 
   // get Service Contract rows
-  const serviceContractsheet =
+  const serviceContractSheet =
     doc.sheetsByTitle['SC - Master (ServiceContract)']
-  const serviceContractRows = await serviceContractsheet.getRows()
+  await serviceContractSheet.loadHeaderRow()
+  const serviceContractRows = await serviceContractSheet.getRows()
   const serviceContractData = serviceContractRows.map(row => ({
     name: row['Name'],
     apiFieldName: row['API Field Name'],
@@ -35,32 +36,31 @@ const getContractRoles = async () => {
     put: row['Allow Partner to Push Updates to Sunrun via API'],
   }))
 
-  // get Service Contract Event rows
-  // const serviceContractEventSheet =
-  //   doc.sheetsByTitle['SCE - Master (Service_Contract_Event__c)']
-  // const serviceContractEventRows = await serviceContractEventSheet.getRows()
-  // const serviceContractEventData = serviceContractEventRows.map(row => ({
-  //   name: row['Name'],
-  //   apiFieldName: row['API Field Name'],
-  //   get: row['Partner Needs this Information (API GET)'],
-  //   put: row['Allow Partner to Push Updates to Sunrun via API'],
-  // }))
+  const serviceContractEventSheet =
+    doc.sheetsByTitle['SCE - Master (Service_Contract_Event__c)']
+  const serviceContractEventRows = await serviceContractEventSheet.getRows()
+  const serviceContractEventData = serviceContractEventRows.map(row => ({
+    name: row['Name'],
+    apiFieldName: row['API Field Name'],
+    get: row['Partner Needs this Information (API GET)'],
+    put: row['Allow Partner to Push Updates to Sunrun via API'],
+  }))
 
-  // serviceContractData.push(...serviceContractEventData)
+  serviceContractData.push(...serviceContractEventData)
 
   const partnerData = {
     contracts: {
       get: serviceContractData
         .filter(row => row.get === 'Yes')
+        .filter(row => row.apiFieldName !== '')
         .map(row => row.apiFieldName),
       put: serviceContractData
         .filter(row => row.put === 'Yes')
+        .filter(row => row.apiFieldName !== '')
         .map(row => row.apiFieldName),
     },
   }
   fs.writeFileSync('partner.json', JSON.stringify(partnerData, null, 2))
-
-  // console.log(rows.map(row => row['Name']))
 }
 
 getContractRoles()
