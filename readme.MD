@@ -10,6 +10,7 @@ Google Cloud Platform https://console.cloud.google.com
 5. Then click in the service account, go to keys, and click Add Key >> Create new key >> JSON.
 6. Download the JSON file and save it in the root of the project with the name googleCredentials.json.
 7. Go to APIS & Services > Enabled APIs and services, click "+Enable APIs and Services" and search for Google Sheets API and enable it.
+8. Share the Google Sheet with the email address of the service account you created in step 3.
 
 ## Env variables: 
 with the downloaded JSON credentials file, you can either use this file or setup env variables with the following values:
