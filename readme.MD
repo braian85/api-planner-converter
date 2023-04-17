@@ -15,13 +15,14 @@ Google Cloud Platform https://console.cloud.google.com
 ## Env variables: 
 with the downloaded JSON credentials file, you can either use this file or setup env variables with the following values:
 
-```GOOGLE_CLIENT_EMAIL```
+```GOOGLE_CLIENT_EMAIL``` (Google Credentials from Google Cloud Platform)
 
-```GOOGLE_PRIVATE_KEY```
+```GOOGLE_PRIVATE_KEY``` (Google Credentials from Google Cloud Platform)
 
 Additionally, it's required to add the following env variables:
 
-```GOOGLE_SHEET_ID```
+```GOOGLE_SHEET_ID``` it's part of the google sheet url: e.g:
+- https://docs.google.com/spreadsheets/d/```1X2X3X4X5X6X7X8X9X```/edit#gid=0
 
 ## Caveat
 
