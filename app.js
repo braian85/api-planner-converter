@@ -25,6 +25,12 @@ const obtainMappers = async () => {
   await doc.loadInfo()
 
   const contracts = {}
+  const partner = {
+    contracts: {
+      patch: [],
+    },
+  }
+  const patch = []
 
   // get Service Contract rows
   const serviceContractSheet = doc.sheetsByTitle['Contract Requirements']
@@ -46,10 +52,28 @@ const obtainMappers = async () => {
       contracts[row.name] = row.apiFieldName
     }
   })
-  console.log('serviceContractData: ', serviceContractData)
-  console.log('Records count: ', serviceContractData.length)
+  // console.log('serviceContractData: ', serviceContractData)
+  // console.log('Records count: ', serviceContractData.length)
 
   fs.writeFileSync('contracts.json', JSON.stringify(contracts, null, 2))
+
+  // patch Service Contract rows
+
+  const serviceContractPatchData = serviceContractRows
+    .map(row => ({
+      object: row['Object'],
+      name: row['Name'],
+      apiFieldName: row['API Field Name'],
+      get: row['Partner Needs this Information (API GET)'],
+      put: row['Allow Partner to Push Updates to Sunrun via API'],
+    }))
+    .filter(value => value.get === 'Yes' && value.put === 'Yes')
+
+  serviceContractPatchData.forEach(row => patch.push(row.apiFieldName))
+  console.log('patch: ', patch)
+
+  partner.contracts.patch = patch
+  fs.writeFileSync('partner.json', JSON.stringify(partner, null, 2))
 
   // const serviceContractEventSheet =
   //   doc.sheetsByTitle['SCE - Master (Service_Contract_Event__c)']
